@@ -15,43 +15,28 @@
         <script type="text/javascript" src="https://www.alessiojr.com/disciplinas/cg/exemplos/js/webgl-utils.js"></script>
         <script type="text/javascript">
             
-            //  A matriz de modelo (Model) trata de orientar, 
-            // posicionar e escalar ou cisalhar (distorcer a 
-            // partir de um eixo) os objetos no mundo. 
             var mMatrix = mat4.create();    
-            
-            //  A matriz de visualização (View) trata de orientar 
-            // e posicionar a câmera para ver uma parte do ambiente. 
-            // Não é a câmera que movimenta, é o mundo todo que dá 
-            // licença.
             var vMatrix = mat4.create();    
-            
-            //  A matriz de projeção (Projection) tem o objetivo de 
-            // colocar todo o mundo tridimensional em um simples plano.
             var pMatrix = mat4.create();
 
-            //  Os buffers guardarão todas as posições 
-            var piramideVertexPositionBuffer;   // do triângulo
+            // Triângulo
+            var piramideVertexPositionBuffer;   
             var piramideVertexColorBuffer;
-            
-            var cuboVertexPositionBuffer;     // e do quadrado
+
+            // Quadrado            
+            var cuboVertexPositionBuffer;
             var cuboVertexColorBuffer;
 
-            /* Buffer de índices */
+            // Buffer de índices
             var cuboVertexIndexBuffer;
             
-            // Pilha de frames?
+            // Pilha de frames
             var mMatrixPilha = [];
             
             // Iniciar o ambiente quando a página for carregada
             $(function(){
                 iniciaWebGL();
             });
-
-            /*Após desenhar o tiangulo ou quadrado, guarde 
-            a matriz original na pilha (push). Quando ne-
-            cessário o acessoa à matriz original outra vez,
-            busque por ela na pilha (pop).*/
 
             function mPushMatrix() {
                 var copy = mat4.clone(mMatrix);
@@ -66,7 +51,7 @@
             }
 
             //guardar o ângulo de rotação em uma variável
-            var rPiramide = 0;                                      /*A cada tick, iremos incrementar o ângulo.*/
+            var rPiramide = 0;
             var rCubo = 0;
 
         
