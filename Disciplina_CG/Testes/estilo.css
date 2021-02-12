@@ -1,0 +1,27 @@
+body {
+   height:500px; 
+   width:600px;
+   margin: 0 auto;
+}
+
+p { text-align: justify; }
+a { font-family:cursive; }
+
+.barra_superior {
+    height:100px; 
+    background-color:white;
+    overflow: hidden;
+}
+
+.barra_superior h1 {
+    text-align: center;
+    color:black;
+    font-family:cursive;
+    font-size:1.5cm;
+}
+
+
+a:visited {
+color:#999999;
+text-decoration:none;
+}
