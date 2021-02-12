@@ -1,3 +1,61 @@
+<!--
+    
+Adicionando cor:
+
+    Para realizar essa operação são necessárias 3 coisas.
+        1. Criar o buffer de cor:
+                "var trapezio_vertex_color_b;"
+        
+        2. Adicionar o atributo de cor no shader program:
+                "shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
+                gl.enableVertexAttribArray(shaderProgram.vertexColorAttribute);"
+        
+        3. Iniciar o Buffer de cor com as cores desejadas:
+            
+            a. Crie o Buffer
+                trapezio_vertex_color_b = gl.createBuffer()
+                gl.bindBuffer(gl.ARRAY_BUFFER, trapezio_vertex_color_b)
+
+            b. Defina os valores que serão atribuídos a ele
+                var t_colors = [
+                    1.0, 0.0, 0.0, 1.0,
+                    0.0, 1.0, 0.0, 1.0,
+                    0.0, 0.0, 1.0, 1.0,
+                    0.2, 0.5, 0.8, 1.0
+                ];
+
+            c. Aplique estes valores ao buffer
+                gl.bufferData(
+                
+                    gl.ARRAY_BUFFER, 
+                    new Float32Array(t_colors),
+                    gl.STATIC_DRAW
+
+                );
+
+            d. Defina a dimensão e o número de ítens contidos no buffer
+                trapezio_vertex_color_b.itemSize = 4;
+                trapezio_vertex_color_b.numItems = 4;
+
+        4. Ligue o buffer a um atributo de um vertice 
+            a. Conecta o boffer ao um ponto de ligação ARRAY_BUFFER
+                gl. (
+                    gl.ARRAY_BUFFER, 
+                    trapezio_vertex_color_b
+                );
+            
+            b. Ligue o buffer definido acime a um atributo do atual um 
+            Objeto vertex Buffer
+
+            gl.vertexAttribPointer(
+                shaderProgram.vertexColorAttribute, 
+                trapezio_vertex_color_b.itemSize, 
+                gl.FLOAT, false, 0, 0
+            );
+
+-->
+
+
 <html>
     <head>
         <meta charset="utf-8">
