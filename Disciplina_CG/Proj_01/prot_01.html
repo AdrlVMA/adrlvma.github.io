@@ -1,0 +1,500 @@
+<!--
+    
+Criando geometria:
+
+     A excessão dos métodos essenciais e padronizados, as etapas para criação de uma da forma usando opengl
+    deve ser feita da seguinte maneira.
+
+
+    Para realizar essa operação é necessário:
+        1. Criar o buffer de posição para cada forma:
+                "var triangulo_vertex_position_b;"
+        
+        2. Inicie o buffer de posição no iniciarBuffers:
+            triangulo_01_vertex_position_b = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, triangulo_01_vertex_position_b);
+
+        
+        3. Iniciar o Buffer de posição com as posições desejadas:
+            
+            a. Crie o Buffer
+                triangulo_01_vertex_position_b = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, triangulo_01_vertex_position_b);
+
+            b. Defina os valores que serão atribuídos a ele
+                var t_01_vertices = [
+                     0.0,  1.0, 0.0,
+                    -1.0, -1.0, 0.0, 
+                     1.0, -1.0, 0.0, 
+
+                ];
+        
+            c. Aplique estes valores ao buffer
+                gl.bufferData(
+            
+                    gl.ARRAY_BUFFER, 
+                    new Float32Array(t_01_vertices),
+                    gl.STATIC_DRAW
+
+                );
+
+            d. Defina a dimensão e o número de ítens contidos no buffer
+                triangulo_01_vertex_position_b.itemSize = 3;
+                triangulo_01_vertex_position_b.numItems = 3;
+
+        4. Gere um método específico "desenhar_triangulo_01" para aquela forma que:
+            
+            a. Crie uma translação para delocar a forma (x,y) e uma "distância" da câmera:
+                var translation = vec3.create();
+                vec3.set (translation, 3.2, -2, -10.0);
+
+            b. Aplique a translação nas mMatriz:
+                mat4.translate(mMatrix, mMatrix, translation);
+
+            b. Conecta o buffer ao um ponto de ligação ARRAY_BUFFER
+                gl.bindBuffer(
+                    
+                    gl.ARRAY_BUFFER, 
+                    triangulo_02_vertex_position_b
+                    
+                );
+            
+            c. Ligue o buffer definido acime a um atributo do atual um 
+            Objeto vertex Buffer
+
+                gl.vertexAttribPointer(
+                    
+                    shaderProgram.vertexPositionAttribute, 
+                    triangulo_02_vertex_position_b.itemSize, 
+                    gl.FLOAT, false, 0, 0
+                    
+                );
+            
+            d. Contrua a matriz de modelo e desenhe o triangulo:
+
+                setMatrixUniforms();
+                gl.drawArrays(
+                    
+                    gl.TRIANGLES, 0, 
+                    triangulo_02_vertex_position_b.numItems
+                    
+                );
+
+        5. Chame esse método no desenharcena():
+            desenhar_triangulo_01()
+
+-->
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href="estilo.css" rel="stylesheet" />
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.4.0/gl-matrix-min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            
+            var mMatrix = mat4.create();    
+            var vMatrix = mat4.create();    
+            var pMatrix = mat4.create();
+
+            var triangulo_01_vertex_position_b;
+
+            var triangulo_02_vertex_position_b;
+
+            //var triangulo_03_vertex_position_b;
+
+            var quadrado_01_vertex_position_b;
+
+            //var quad_02_vertex_position_b;
+
+            //var quad_03_vertex_position_b;
+
+            // Iniciar o ambiente quando a página for carregada
+            $(function(){
+                iniciaWebGL();
+            });
+
+        
+
+        function iniciaWebGL(){
+            var canvas = $('#canvas-webgl')[0];
+            
+            // Chamar funções
+            iniciarGL(canvas);
+            iniciarShaders();
+            iniciarBuffers();
+            iniciarAmbiente();
+            desenharCena();
+
+        }
+
+        function iniciarGL(canvas){
+            try{
+                gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+                gl.viewportWidth  = canvas.width;
+                gl.viewportHeight = canvas.height;
+            }
+            catch(e){
+                if(!gl)
+                    alert("Não pode inicializar WebGL, desculpe");
+            }
+        }
+
+        var shaderProgram;
+        function iniciarShaders(){
+
+            var vertexShader = getShader(gl, "#shader-vs");     /* Criar os objetos shaders */
+            var fragmentShader = getShader(gl, "#shader-fs");   /* e compilá-los. */
+            
+            shaderProgram = gl.createProgram();                 /* Criar o programa que */
+            gl.attachShader(shaderProgram, vertexShader);       /* associará os shaders */
+            gl.attachShader(shaderProgram, fragmentShader);     /* usando a função attachShader */
+            gl.linkProgram(shaderProgram);
+            
+            if(!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)){
+                alert("Não pode inicializar shaders");
+            }
+            
+            gl.useProgram(shaderProgram);   /* Chamando a função 'useProgram', */
+        
+            /* podemos referenciar todos os attributes e uniforms dos shaders */
+            shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+            gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+
+            /* Depois obtemos as referências dos uniforms, que nesse caso são as matrizes MVP */
+            shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");    /* Elas são simples números inteiros. */
+            shaderProgram.vMatrixUniform = gl.getUniformLocation(shaderProgram, "uVMatrix");
+            shaderProgram.mMatrixUniform = gl.getUniformLocation(shaderProgram, "uMMatrix");
+               
+        }
+        
+        function getShader(gl, id){ /* Identificador e o contexto webgl */
+            /* Compilar os shaders, chamada para cada shader na função iniciarShaders */
+
+            /* Captura a tag script que contenha o script do shader */
+            var shaderScript = $(id)[0]; 
+            if(!shaderScript){
+                return null;
+            }
+            
+            /* Capturamos o objeto representando o texto dentro da script */
+            var str = "";
+            var k = shaderScript.firstChild;
+            while(k){
+                if(k.nodeType == 3)             /*  É um texto?  */
+                    str += k.textContent;       /* Adicionamos seu conteúdo a uma variável de saída */
+                k = k.nextSibling;
+            }
+            
+            /* Aqui criamos o objeto do shader dentro do contexto */
+            var shader;
+            if(shaderScript.type == "x-shader/x-fragment"){         /* De acordo com seu tipo */
+                shader = gl.createShader(gl.FRAGMENT_SHADER);
+            } else if(shaderScript.type == "x-shader/x-vertex"){    /* De acordo com seu tipo */
+                shader = gl.createShader(gl.VERTEX_SHADER);
+            } else{
+                return null;
+            }
+            
+            /* Estamos dizendo ao contexto que o código desse objeto 
+                shader é o texto do script que capturamos */
+            gl.shaderSource(shader, str);
+            gl.compileShader(shader);       /* Em seguida compilamos (ela é enviada para a GPU) */
+            
+            if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)){  /* Perguntamos se a compilação foi um sucesso */
+                alert(gl.getShaderInfoLog(shader));                 /* Alertando-nos em caso de problema. */
+                return null;
+            }
+        
+            return shader;
+
+        }
+
+        function iniciarBuffers(){
+            
+            // Definindo vértices e configurações do buffer - Triangulo 01 Corpo e Chapéu
+            triangulo_01_vertex_position_b = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, triangulo_01_vertex_position_b);
+
+            var t_01_vertices = [
+                
+                  0.0,  1.0, 0.0,
+                -1.0, -1.0, 0.0, 
+                 1.0, -1.0, 0.0, 
+
+            ];
+
+            gl.bufferData(
+            
+                gl.ARRAY_BUFFER, 
+                new Float32Array(t_01_vertices),
+                gl.STATIC_DRAW
+
+            );
+
+            triangulo_01_vertex_position_b.itemSize = 3;
+            triangulo_01_vertex_position_b.numItems = 3;
+
+            
+            
+            // Definindo vértices e configurações do buffer - Triangulo 02 Rabo
+            triangulo_02_vertex_position_b = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, triangulo_02_vertex_position_b);
+
+            var t_02_vertices = [
+                
+                0.0, -1.0, 0.0,
+                1.0, 1.0, 0.0, 
+                -1.0, 1.0, 0.0, 
+
+            ];
+
+            gl.bufferData(
+            
+                gl.ARRAY_BUFFER, 
+                new Float32Array(t_02_vertices),
+                gl.STATIC_DRAW
+
+            );
+
+            triangulo_02_vertex_position_b.itemSize = 3;
+            triangulo_02_vertex_position_b.numItems = 3;
+
+            
+
+            // Definindo vértices e configurações do buffer - Quadrado 01 Cabeça
+            quadrado_01_vertex_position_b = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, quadrado_01_vertex_position_b);
+
+            var q_01_vertices = [
+                
+                 1.0,  1.0, 0.0,
+                -5.0,  1.0, 0.0, 
+                 1.0, -3.0, 0.0, 
+                -5.0, -3.0, 0.0 
+
+            ];
+
+            gl.bufferData(
+            
+                gl.ARRAY_BUFFER, 
+                new Float32Array(q_01_vertices),
+                gl.STATIC_DRAW
+
+            );
+
+            quadrado_01_vertex_position_b.itemSize = 3;
+            quadrado_01_vertex_position_b.numItems = 4;
+
+            // Definindo vértices e configurações do buffer - Quadrado 02 Pés
+            quadrado_02_vertex_position_b = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, quadrado_02_vertex_position_b);
+
+            var q_02_vertices = [
+                
+                 1.0,  1.0, 0.0,
+                -6.0,  1.0, 0.0, 
+                 1.0, -3.0, 0.0, 
+                -6.0, -3.0, 0.0 
+
+            ];
+
+            gl.bufferData(
+            
+                gl.ARRAY_BUFFER, 
+                new Float32Array(q_02_vertices),
+                gl.STATIC_DRAW
+
+            );
+
+            quadrado_02_vertex_position_b.itemSize = 3;
+            quadrado_02_vertex_position_b.numItems = 4;
+
+        }
+
+        function iniciarAmbiente(){
+
+            // Limpar a tela
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);  
+            
+            // Habilitando o teste Z-Buffer
+            gl.enable(gl.DEPTH_TEST);
+
+        }
+
+        function desenharCena(){
+
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            
+            mat4.perspective(
+                
+                pMatrix, 45, 
+                gl.viewportWidth / gl.viewportHeight, 
+                0.1, 100.0
+            
+                );
+
+            mat4.identity(mMatrix); 
+            mat4.identity(vMatrix);
+            
+            desenhar_triangulo_01()
+            desenhar_triangulo_02()
+            desenhar_triangulo_03()
+            
+            desenhar_quadrado_01()
+            desenhar_quadrado_02()
+            desenhar_quadrado_03()
+
+        }
+
+        function desenhar_triangulo_01(){
+                        
+            // Desenhando Triangulo Central
+            var translation = vec3.create();
+            vec3.set (translation, 0, 0, -5.0); 
+            mat4.translate(mMatrix, mMatrix, translation);
+            gl.bindBuffer(gl.ARRAY_BUFFER, triangulo_01_vertex_position_b);
+            gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, triangulo_01_vertex_position_b.itemSize, gl.FLOAT, false, 0, 0);
+            setMatrixUniforms();
+            gl.drawArrays(gl.TRIANGLES, 0, triangulo_01_vertex_position_b.numItems);
+            
+        }
+
+        function desenhar_triangulo_02(){
+
+            // Desenhando Triangulo Invertido (rabo)
+            var translation = vec3.create();
+            vec3.set (translation, 3.2, -2, -10.0); 
+            mat4.translate(mMatrix, mMatrix, translation);
+            gl.bindBuffer(gl.ARRAY_BUFFER, triangulo_02_vertex_position_b);
+            gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, triangulo_02_vertex_position_b.itemSize, gl.FLOAT, false, 0, 0);
+            setMatrixUniforms();
+            gl.drawArrays(gl.TRIANGLES, 0, triangulo_02_vertex_position_b.numItems);
+            
+        }
+
+        function desenhar_triangulo_03(){
+
+            //Aproveitando buffer 1 para criar o chapéu
+            var translation = vec3.create();
+            vec3.set (translation, -4.0, 13.0, -12.0); 
+            mat4.translate(mMatrix, mMatrix, translation);
+            gl.bindBuffer(gl.ARRAY_BUFFER, triangulo_01_vertex_position_b);
+            gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, triangulo_01_vertex_position_b.itemSize, gl.FLOAT, false, 0, 0);
+            setMatrixUniforms();
+            gl.drawArrays(gl.TRIANGLES, 0, triangulo_01_vertex_position_b.numItems);
+
+        }
+
+        function desenhar_quadrado_01(){
+
+            //Aproveitando buffer 1 para criar o chapéu
+            var translation = vec3.create();
+            vec3.set (translation, -0.3, -2.2, 0.0); 
+            mat4.translate(mMatrix, mMatrix, translation);
+            gl.bindBuffer(gl.ARRAY_BUFFER, quadrado_01_vertex_position_b);
+            gl.vertexAttribPointer(
+                
+                shaderProgram.vertexPositionAttribute, 
+                quadrado_01_vertex_position_b.itemSize, 
+                gl.FLOAT, false, 0, 0
+                
+            );
+
+            setMatrixUniforms();
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, quadrado_01_vertex_position_b.numItems);
+
+        }
+
+        function desenhar_quadrado_02(){
+
+            //Aproveitando buffer 1 para criar o chapéu
+            var translation = vec3.create();
+            vec3.set (translation, -3.0, -15.6, 0.0); 
+            mat4.translate(mMatrix, mMatrix, translation);
+            gl.bindBuffer(gl.ARRAY_BUFFER, quadrado_01_vertex_position_b);
+            gl.vertexAttribPointer(
+                
+                shaderProgram.vertexPositionAttribute, 
+                quadrado_01_vertex_position_b.itemSize, 
+                gl.FLOAT, false, 0, 0
+                
+            );
+
+            setMatrixUniforms();
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, quadrado_01_vertex_position_b.numItems);
+
+        }
+
+        function desenhar_quadrado_03(){
+
+            //Aproveitando buffer 1 para criar o chapéu
+            var translation = vec3.create();
+            vec3.set (translation, 12.0, -0.0, 0.0); 
+            mat4.translate(mMatrix, mMatrix, translation);
+            gl.bindBuffer(gl.ARRAY_BUFFER, quadrado_01_vertex_position_b);
+            gl.vertexAttribPointer(
+                
+                shaderProgram.vertexPositionAttribute, 
+                quadrado_01_vertex_position_b.itemSize, 
+                gl.FLOAT, false, 0, 0
+                
+            );
+
+            setMatrixUniforms();
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, quadrado_01_vertex_position_b.numItems);
+
+        }
+
+        function setMatrixUniforms(){
+
+            gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
+            gl.uniformMatrix4fv(shaderProgram.vMatrixUniform, false, vMatrix);
+            gl.uniformMatrix4fv(shaderProgram.mMatrixUniform, false, mMatrix);
+
+        }
+
+    </script>
+
+    <script id="shader-vs" type="x-shader/x-vertex">
+        
+        attribute vec3 aVertexPosition;   
+        
+        uniform mat4 uMMatrix;
+        uniform mat4 uVMatrix;
+        uniform mat4 uPMatrix;
+        
+        void main(void){
+
+            gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+
+        }
+    </script>
+
+    <script id="shader-fs" type="x-shader/x-fragment">
+        precision mediump float;    
+
+        void main(void){
+
+            gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+
+        }
+    </script>
+
+    </head>
+
+    <body>
+        <div class="barra_superior">
+            <h1>Adrl VMA </h1>
+        </div>
+
+        <hr>
+
+        <canvas id="canvas-webgl"
+                width="600px"
+                height="500px"
+                style="border:none">
+        </canvas>
+    </body>
+</html>
