@@ -102,13 +102,9 @@ Criando geometria:
 
             var triangulo_02_vertex_position_b;
 
-            //var triangulo_03_vertex_position_b;
-
             var quadrado_01_vertex_position_b;
 
-            //var quad_02_vertex_position_b;
-
-            //var quad_03_vertex_position_b;
+            var circle_vertex_position_b;
 
             // Iniciar o ambiente quando a página for carregada
             $(function(){
@@ -311,6 +307,31 @@ Criando geometria:
             quadrado_02_vertex_position_b.itemSize = 3;
             quadrado_02_vertex_position_b.numItems = 4;
 
+
+            // Definindo vértices e configurações do buffer - Olho e nariz
+            
+            circle_vertex_position_b = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, circle_vertex_position_b);
+
+            var c_vertices = [];
+            var radius = 1;
+            var qtd_vertices = 100;
+
+            for (let i = 0; i < 2 * Math.PI; i += 2 * Math.PI / qtd_vertices) {
+                c_vertices.push(Math.cos(i) * radius, Math.sin(i) * radius, 0);
+            }
+
+            gl.bufferData(
+            
+                gl.ARRAY_BUFFER, 
+                new Float32Array(c_vertices),
+                gl.STATIC_DRAW
+
+            );
+
+            circle_vertex_position_b.itemSize = 3;
+            circle_vertex_position_b.numItems = 100;
+
         }
 
         function iniciarAmbiente(){
@@ -346,6 +367,8 @@ Criando geometria:
             desenhar_quadrado_02()
             desenhar_quadrado_03()
 
+            desenhar_circulo_01()
+
         }
 
         function desenhar_triangulo_01(){
@@ -378,7 +401,7 @@ Criando geometria:
 
             //Aproveitando buffer 1 para criar o chapéu
             var translation = vec3.create();
-            vec3.set (translation, -4.0, 13.0, -12.0); 
+            vec3.set (translation, -4.17, 13.0, -12.0); 
             mat4.translate(mMatrix, mMatrix, translation);
             gl.bindBuffer(gl.ARRAY_BUFFER, triangulo_01_vertex_position_b);
             gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, triangulo_01_vertex_position_b.itemSize, gl.FLOAT, false, 0, 0);
@@ -389,9 +412,9 @@ Criando geometria:
 
         function desenhar_quadrado_01(){
 
-            //Aproveitando buffer 1 para criar o chapéu
+            // Criando a cabeça 
             var translation = vec3.create();
-            vec3.set (translation, -0.3, -2.2, 0.0); 
+            vec3.set (translation, -0.0, -2.2, 0.0); 
             mat4.translate(mMatrix, mMatrix, translation);
             gl.bindBuffer(gl.ARRAY_BUFFER, quadrado_01_vertex_position_b);
             gl.vertexAttribPointer(
@@ -444,6 +467,26 @@ Criando geometria:
 
             setMatrixUniforms();
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, quadrado_01_vertex_position_b.numItems);
+
+        }
+        
+        function desenhar_circulo_01(){
+
+            //Criando nariz
+            var translation = vec3.create();
+            vec3.set (translation, -16.35, 19.4, -6.0); 
+            mat4.translate(mMatrix, mMatrix, translation);
+            gl.bindBuffer(gl.ARRAY_BUFFER, circle_vertex_position_b);
+            gl.vertexAttribPointer(
+                
+                shaderProgram.vertexPositionAttribute, 
+                quadrado_01_vertex_position_b.itemSize, 
+                gl.FLOAT, false, 0, 0
+                
+            );
+
+            setMatrixUniforms();
+            gl.drawArrays(gl.TRIANGLE_FAN, 0, circle_vertex_position_b.numItems);
 
         }
 
