@@ -3,6 +3,7 @@ body {
    width:600px;
    margin: 0 auto;
 }
+p { text-align: justify; }
 
 .barra_superior {
     height:100px; 
