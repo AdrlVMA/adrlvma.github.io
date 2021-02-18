@@ -313,10 +313,15 @@ Adicionando cor:
 
             triangulo_vertex_color_b = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, triangulo_vertex_color_b);
+            
+            a1 = Math.random()
+            a2 = Math.random()
+            a3 = Math.random()
 
             cores = []
             for (var i=0; i < 3; i++) {
-                cores = cores.concat([0.9, 0.7, 0.2, 1.0]);
+                //cores = cores.concat([0.9, 0.7, 0.2, 1.0]);
+                cores = cores.concat([a1, a2, a3, 1.0]);
             }
             
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cores), gl.STATIC_DRAW);
@@ -327,9 +332,13 @@ Adicionando cor:
             quadrado_vertex_color_b = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, quadrado_vertex_color_b);
 
+            a1 = Math.random()
+            a2 = Math.random()
+            a3 = Math.random()
+
             cores = []
             for (var i=0; i < 4; i++) {
-                cores = cores.concat([0.1, 0.5, 1.0, 1.0]);
+                cores = cores.concat([a1, a2, a3, 1.0]);
             }
             
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cores), gl.STATIC_DRAW);
@@ -340,9 +349,13 @@ Adicionando cor:
             circle_vertex_color_b = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, circle_vertex_color_b);
 
+            a1 = Math.random()
+            a2 = Math.random()
+            a3 = Math.random()
+
             cores = []
             for (var i=0; i < 100; i++) {
-                cores = cores.concat([0.8, 0.2, 0.3, 1.0]);
+                cores = cores.concat([a1, a2, a3, 1.0]);
             }
             
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cores), gl.STATIC_DRAW);
@@ -689,6 +702,14 @@ Adicionando cor:
         <div class="barra_superior">
             <h1>AdrlVMA </h1>
         </div>
+
+        <hr>
+        <p> 
+            Nesta página você encontrará a segunda fase do desenvolvimento de um esboço baseado em uma imagem tida como inspiração.
+            Neste arquivo, busca-se mostrar a competencia de coloração dos objetos e formas na tela utilizando WebGL. Para uma experiência 
+            mais satisfatória aperte F5 e observe a mágica.
+            Caso seja do seu interesse ver os códigos, fique a vontade para consultar o github de <a href="https://github.com/AdrlVMA">@adrlvma</a>. Aproveite e divirta-se!!!
+        </p>
 
         <hr>
 
