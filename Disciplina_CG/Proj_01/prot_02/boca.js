@@ -13,17 +13,17 @@ function desenhar_boca(){
         
     );
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, retangulo_02_vertex_position_b);
+    gl.bindBuffer(gl.ARRAY_BUFFER, circle_vertex_color_b);
     gl.vertexAttribPointer(
 
         shaderProgram.vertexColorAttribute,
-        quadrado_vertex_color_b.itemSize,
+        circle_vertex_color_b.itemSize,
         gl.FLOAT, false, 0, 0
 
     );
 
 
     setMatrixUniforms();
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, retangulo_02_vertex_position_b.numItems);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, circle_vertex_color_b.numItems);
 
 }
