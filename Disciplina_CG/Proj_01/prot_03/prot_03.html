@@ -64,6 +64,7 @@ Adicionando cor:
         <meta charset="utf-8">
         <link href="../../estilo.css" rel="stylesheet" />
 
+        <script type="text/javascript" src="./animacao.js"></script>
         <script type="text/javascript" src="./boca.js"></script>
         <script type="text/javascript" src="./cabeca.js"></script>
         <script type="text/javascript" src="./circulo.js"></script>
@@ -80,6 +81,7 @@ Adicionando cor:
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.4.0/gl-matrix-min.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://www.alessiojr.com/disciplinas/cg/exemplos/js/webgl-utils.js"></script>
         <script type="text/javascript">
             
             var mMatrix = mat4.create();    
@@ -112,6 +114,8 @@ Adicionando cor:
             iniciarBuffers();
             iniciarAmbiente();
             desenharCena();
+
+            tick();         
 
         }
 
@@ -211,7 +215,7 @@ Adicionando cor:
             criando_retangulo()
             criando_retangulo_esticado()
             
-            criando_circulo(1, 20)
+            criando_circulo(1, 30)
 
             // Cores
             
@@ -249,7 +253,6 @@ Adicionando cor:
             desenhar_corpo()
             desenhar_rabo()
             desenhar_orelha()
-            
             
             desenhar_cabeca()
             
