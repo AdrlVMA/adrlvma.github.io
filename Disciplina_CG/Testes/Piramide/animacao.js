@@ -29,7 +29,7 @@ function tick(){
     animar();
 
     
-    if(aux_cor == 10){
+    if(aux_cor == 20){
         iniciar_buffer_cor_piramide();
         console.log("Troca cor")
         aux_cor = 0;
