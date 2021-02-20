@@ -31,7 +31,6 @@ function tick(){
     
     if(aux_cor == 15){
         iniciar_buffer_cor_piramide();
-        console.log("Troca cor")
         aux_cor = 0;
     }
     aux_cor = aux_cor + 1;
