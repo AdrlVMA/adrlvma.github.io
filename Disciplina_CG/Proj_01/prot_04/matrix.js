@@ -1,0 +1,23 @@
+
+// Pilha de frames
+var mMatrixPilha = [];
+
+
+function mPushMatrix() {
+    var copy = mat4.clone(mMatrix);
+    mMatrixPilha.push(copy);
+}
+
+function mPopMatrix() {
+    if (mMatrixPilha.length == 0) {
+        throw "inválido popMatrix!";
+    }
+    mMatrix = mMatrixPilha.pop();
+}
+
+
+function setMatrixUniforms(){
+    gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
+    gl.uniformMatrix4fv(shaderProgram.vMatrixUniform, false, vMatrix);
+    gl.uniformMatrix4fv(shaderProgram.mMatrixUniform, false, mMatrix);
+}
