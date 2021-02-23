@@ -85,6 +85,7 @@ function animar_corpo(){
         if(teste == false){
             r_corpo  += ((90*diferenca)/1000.0) % 360.0;
         }
+        
         if(teste == true){
             r_corpo  -= ((90*diferenca)/1000.0) % 360.0;
         }

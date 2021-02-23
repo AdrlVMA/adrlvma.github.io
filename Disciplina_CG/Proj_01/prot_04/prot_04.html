@@ -12,6 +12,9 @@
         <script type="text/javascript" src="./Corpo.js"></script>
         <script type="text/javascript" src="./Pe.js"></script>
         <script type="text/javascript" src="./Cabeca.js"></script>
+        <script type="text/javascript" src="./Olho.js"></script>
+        <script type="text/javascript" src="./Boca.js"></script>
+        <script type="text/javascript" src="./Nariz.js"></script>
 
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.4.0/gl-matrix-min.js"></script>
@@ -58,6 +61,15 @@
             iniciar_buffer_posicao_cabeca();
             iniciar_buffer_cor_cabeca();
 
+            criando_circulo(0.2, 30);
+            definindo_cores_circulo();
+
+            criando_retangulo_esticado();
+            definido_cores_quadrado();
+
+            iniciar_buffer_posicao_nariz();
+            iniciar_buffer_cor_nariz();
+
         }
 
         function desenharCena(){
@@ -73,9 +85,17 @@
 
             desenhar_pe_esquerdo();
             desenhar_pe_direito();
-
-            desenhar_cabeca();
             
+            desenhar_cabeca();
+
+            desenhar_olho_esq();
+            desenhar_olho_dir();
+
+            mPopMatrix();
+
+            desenhar_boca();
+
+            desenha_nariz();
 
         }
 

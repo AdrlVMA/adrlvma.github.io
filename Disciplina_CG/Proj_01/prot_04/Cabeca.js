@@ -60,7 +60,7 @@ function iniciar_buffer_cor_cabeca(){
     cabeca_vertex_cor_b = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, cabeca_vertex_cor_b);
     
-    var cores = cor_random_vertice(24)
+    var cores = cor_random_n(24)
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cores), gl.STATIC_DRAW);
     cabeca_vertex_cor_b.itemSize = 4;
@@ -71,8 +71,9 @@ function iniciar_buffer_cor_cabeca(){
 function desenhar_cabeca(){
 
     var translation = vec3.create();
-    vec3.set (translation, -4.0-deslocamento, 8.0, -0.0); 
+    vec3.set (translation, -1.2, 3.5, -8.0); 
 
+    mPushMatrix();
     //vec3.set (translation, -1.0, 3.0, -8.0); 
     mat4.translate(mMatrix, mMatrix, translation);
     gl.bindBuffer(gl.ARRAY_BUFFER, cabeca_vertex_posicao_b);

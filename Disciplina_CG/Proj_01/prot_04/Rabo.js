@@ -52,10 +52,13 @@ function desenha_rabo(){
     // Desenhando Triângulo
     var translation = vec3.create();
     vec3.set (translation, 4, -1.5, -10.0); 
-    mat4.translate(mMatrix, mMatrix, translation);
     
     mPushMatrix();
-    mat4.rotate(mMatrix, mMatrix, degToRad(r_rabo), [0, 1, 0]);   // Aplica rotação
+
+    mat4.translate(mMatrix, mMatrix, translation);
+    
+    
+    mat4.rotate(mMatrix, mMatrix, degToRad(r_rabo), [1, 1, 1]);   // Aplica rotação
 
     gl.bindBuffer(gl.ARRAY_BUFFER, rabo_vertex_position_b);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, rabo_vertex_position_b.itemSize, gl.FLOAT, false, 0, 0);
@@ -78,20 +81,20 @@ function animar_rabo(){
     
         var diferenca = agora - ultimo_rabo;
         if(teste_rabo == false){
-            r_rabo  += ((90*diferenca)/1000.0) % 360.0;
+            r_rabo  += ((90*diferenca)/10.0) % 360.0;
         }
         if(teste_rabo == true){
             r_rabo  -= ((90*diferenca)/1000.0) % 360.0;
         }
 
-        if(r_rabo >= 180){
+        /*if(r_rabo >= 180){
             teste_rabo = true;
             iniciar_buffer_cor_rabo();
         }
-        if(r_rabo <= 0){
+        if(r_rabo <= -10){
             teste_rabo = false;
             iniciar_buffer_cor_rabo();
-        }
+        }*/
 
     }
 

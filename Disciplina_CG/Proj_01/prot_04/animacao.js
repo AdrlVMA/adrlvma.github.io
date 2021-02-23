@@ -12,7 +12,10 @@ function tick(){
 
     animar_corpo();
     animar_rabo();
-    animar_pe();
+    animar_pe_direito();
+    animar_pe_esquerdo();
+
+    animar_nariz();
     
 
 }
