@@ -1,0 +1,159 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href="../../estilo.css" rel="stylesheet" />
+        
+        <script type="text/javascript" src="./shader.js"></script>
+        <script type="text/javascript" src="./animacao.js"></script>
+        <script type="text/javascript" src="./cores.js"></script>
+        <script type="text/javascript" src="./matrix.js"></script>
+
+        <script type="text/javascript" src="./Farois.js"></script>
+        <script type="text/javascript" src="./Corpo.js"></script>
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.4.0/gl-matrix-min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://www.alessiojr.com/disciplinas/cg/exemplos/js/webgl-utils.js"></script>
+        <script type="text/javascript">
+
+        var mMatrix = mat4.create();    
+        var vMatrix = mat4.create();    
+        var pMatrix = mat4.create();
+
+        
+        $(function(){
+            // Iniciar o ambiente quando a página for carregada
+            iniciaWebGL();
+        });
+
+        function iniciaWebGL(){
+            var canvas = $('#canvas-webgl')[0];
+            
+            iniciarGL(canvas); // iniciando canvas
+            
+            iniciarShaders();
+            iniciarBuffers();
+            iniciarAmbiente();
+            desenharCena();
+
+            tick();
+
+        }
+
+        function iniciarBuffers(){
+
+            criando_vermelho(2, 30);
+            definindo_cores_vermelho(false);
+
+            criando_corpo();
+            definido_cores_corpo();
+        
+            definindo_cores_amarelo(false);
+            definindo_cores_verde(false);
+            
+
+        }
+
+        function desenharCena(){
+
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            mat4.perspective(pMatrix, 45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
+            mat4.identity(mMatrix);
+            mat4.identity(vMatrix);
+
+            desenhar_corpo();
+
+            desenhar_vermelho_01();
+            desenhar_Amarelo();
+            desenhar_Verde();
+
+        }
+
+
+        function setMatrixUniforms(){
+            gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
+            gl.uniformMatrix4fv(shaderProgram.vMatrixUniform, false, vMatrix);
+            gl.uniformMatrix4fv(shaderProgram.mMatrixUniform, false, mMatrix);
+        }
+
+
+        function iniciarAmbiente(){
+            gl.clearColor(1, 1, 1, 1.0);  /* Limpar a tela usando */
+            
+            /* Z-Buffer simplesmente descarta o fragmento 
+            mais longe da câmera (coordenada Z menor), e usa 
+            o fragmento mais perto */
+           // gl.enable(gl.DEPTH_TEST);           /* Habilitando o teste Z-Buffer */
+        }
+        
+        function iniciarGL(canvas){
+            try{
+                gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+                gl.viewportWidth  = canvas.width;
+                gl.viewportHeight = canvas.height;
+            }
+            catch(e){
+                if(!gl)
+                    alert("Não pode inicializar WebGL, desculpe");
+            }
+        }
+
+        </script>
+
+        <script id="shader-vs" type="x-shader/x-vertex">
+            // Executado para cada vertice
+            
+            attribute vec3 aVertexPosition;   
+
+            attribute vec4 aVertexColor;
+            
+            uniform mat4 uMMatrix;
+            uniform mat4 uVMatrix;
+            uniform mat4 uPMatrix;
+
+            varying vec4 vColor;
+
+            void main(void){
+
+                gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+
+                vColor = aVertexColor;
+
+            }
+        </script>
+
+        <script id="shader-fs" type="x-shader/x-fragment">
+            // Definição da cor do fragmento 
+            
+            precision mediump float;
+
+            varying vec4 vColor;
+            
+            void main(void){
+
+                gl_FragColor = vColor;
+
+            }
+        </script>
+
+    </head>
+
+    <body>
+        <div class="barra_superior">
+            <h1>Adrl VMA </h1>
+        </div>
+        <hr>
+        <p> 
+           Nesta página você encontrará um semáforo. Não mude de página no sinal vermelho e tome cuidado com o amarelo. Atenção é importante e, se beber, não navegue!
+            Caso seja do seu interesse ver os códigos, fique a vontade para consultar o github de <a href="https://github.com/AdrlVMA">@adrlvma</a>. Aproveite e divirta-se!!!
+        </p>
+
+        <hr>
+
+        <canvas id="canvas-webgl"
+                width="600px"
+                height="500px"
+                style="border:none">
+        </canvas>
+    </body>
+</html>
