@@ -96,14 +96,15 @@ function iniciar_buffer_textura_cubo(){
 //-------------------------------------------------------------------------------------
 function iniciarBuffers(){
 
-    iniciar_buffer_posicao_piramide()
-    iniciar_buffer_cor_piramide()
+    iniciar_buffer_posicao_piramide();
+    iniciar_buffer_cor_piramide();
 
-    iniciar_buffer_posicao_cubo()
-    iniciar_buffer_cor_cubo()
+    iniciar_buffer_posicao_cubo();
+    iniciar_buffer_cor_cubo();
 
-    iniciar_buffer_index_piramide()
+    iniciar_buffer_index_piramide();
 
+    iniciar_buffer_textura_cubo();
 }
 
 //-------------------------------------------------------------------------------------

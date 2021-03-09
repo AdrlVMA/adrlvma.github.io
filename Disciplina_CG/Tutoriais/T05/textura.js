@@ -61,7 +61,7 @@ function iniciarTextura(){
     
     predioTextura = gl.createTexture();
     predioTextura.image = new Image();
-    predioTextura.crossOrigin.image = "anonymous"; //- Problemático.
+    //predioTextura.crossOrigin.image = "anonymous"; //- Problemático.
     
     predioTextura.image.onload = function(){
       tratarTextura(predioTextura);
