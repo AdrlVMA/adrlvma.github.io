@@ -1,0 +1,191 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href="../../estilo.css" rel="stylesheet" />
+        
+        <script type="text/javascript" src="./shader.js"></script>
+        <script type="text/javascript" src="./animacao.js"></script>
+        <script type="text/javascript" src="./cores.js"></script>
+        <script type="text/javascript" src="./matrix.js"></script>
+
+        <script type="text/javascript" src="./Rabo.js"></script>
+        <script type="text/javascript" src="./Corpo.js"></script>
+        <script type="text/javascript" src="./Pe.js"></script>
+        <script type="text/javascript" src="./Cabeca.js"></script>
+        <script type="text/javascript" src="./Olho.js"></script>
+        <script type="text/javascript" src="./Boca.js"></script>
+        <script type="text/javascript" src="./Nariz.js"></script>
+
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.4.0/gl-matrix-min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://www.alessiojr.com/disciplinas/cg/exemplos/js/webgl-utils.js"></script>
+        <script type="text/javascript">
+
+        var mMatrix = mat4.create();    
+        var vMatrix = mat4.create();    
+        var pMatrix = mat4.create();
+
+        
+        $(function(){
+            // Iniciar o ambiente quando a página for carregada
+            iniciaWebGL();
+        });
+
+        function iniciaWebGL(){
+            var canvas = $('#canvas-webgl')[0];
+            
+            iniciarGL(canvas); // iniciando canvas
+            
+            iniciarShaders();
+            iniciarBuffers();
+            iniciarAmbiente();
+            desenharCena();
+
+            tick();
+
+        }
+
+        function iniciarBuffers(){
+
+            iniciar_buffer_posicao_piramide();
+            iniciar_buffer_cor_piramide();
+
+            iniciar_buffer_posicao_rabo();
+            iniciar_buffer_cor_rabo();
+
+            iniciar_buffer_posicao_pe();
+            iniciar_buffer_cor_pe_esquerdo();
+            iniciar_buffer_cor_pe_direito();
+
+            iniciar_buffer_posicao_cabeca();
+            iniciar_buffer_cor_cabeca();
+
+            criando_circulo(0.2, 30);
+            definindo_cores_circulo();
+
+            criando_retangulo_esticado();
+            definido_cores_quadrado();
+
+            iniciar_buffer_posicao_nariz();
+            iniciar_buffer_cor_nariz();
+
+        }
+
+        function desenharCena(){
+
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            mat4.perspective(pMatrix, 45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
+            mat4.identity(mMatrix);
+            mat4.identity(vMatrix);
+    
+            desenha_Piramide();
+
+            desenha_rabo();
+
+            desenhar_pe_esquerdo();
+            desenhar_pe_direito();
+            
+            desenhar_cabeca();
+
+            desenhar_olho_esq();
+            desenhar_olho_dir();
+
+            mPopMatrix();
+
+            desenhar_boca();
+
+            desenha_nariz();
+
+        }
+
+
+        function setMatrixUniforms(){
+            gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
+            gl.uniformMatrix4fv(shaderProgram.vMatrixUniform, false, vMatrix);
+            gl.uniformMatrix4fv(shaderProgram.mMatrixUniform, false, mMatrix);
+        }
+
+
+        function iniciarAmbiente(){
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);  /* Limpar a tela usando */
+            
+            /* Z-Buffer simplesmente descarta o fragmento 
+            mais longe da câmera (coordenada Z menor), e usa 
+            o fragmento mais perto */
+            gl.enable(gl.DEPTH_TEST);           /* Habilitando o teste Z-Buffer */
+        }
+        
+        function iniciarGL(canvas){
+            try{
+                gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+                gl.viewportWidth  = canvas.width;
+                gl.viewportHeight = canvas.height;
+            }
+            catch(e){
+                if(!gl)
+                    alert("Não pode inicializar WebGL, desculpe");
+            }
+        }
+
+        </script>
+
+        <script id="shader-vs" type="x-shader/x-vertex">
+            // Executado para cada vertice
+            
+            attribute vec3 aVertexPosition;   
+
+            attribute vec4 aVertexColor;
+            
+            uniform mat4 uMMatrix;
+            uniform mat4 uVMatrix;
+            uniform mat4 uPMatrix;
+
+            varying vec4 vColor;
+
+            void main(void){
+
+                gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+
+                vColor = aVertexColor;
+
+            }
+        </script>
+
+        <script id="shader-fs" type="x-shader/x-fragment">
+            // Definição da cor do fragmento 
+            
+            precision mediump float;
+
+            varying vec4 vColor;
+            
+            void main(void){
+
+                gl_FragColor = vColor;
+
+            }
+        </script>
+
+    </head>
+
+    <body>
+        <div class="barra_superior">
+            <h1>Adrl VMA </h1>
+        </div>
+        <hr>
+        <p> 
+            Nesta página você encontrará a segunda fase do desenvolvimento de um esboço baseado em uma imagem tida como inspiração.
+            Neste arquivo, busca-se mostrar a competencia de coloração dos objetos e formas na tela utilizando WebGL. Para uma experiência 
+            mais satisfatória aperte F5 e observe a mágica.
+            Caso seja do seu interesse ver os códigos, fique a vontade para consultar o github de <a href="https://github.com/AdrlVMA">@adrlvma</a>. Aproveite e divirta-se!!!
+        </p>
+
+        <hr>
+
+        <canvas id="canvas-webgl"
+                width="600px"
+                height="500px"
+                style="border:none">
+        </canvas>
+    </body>
+</html>

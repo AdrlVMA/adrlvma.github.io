@@ -1,0 +1,121 @@
+<!--
+
+Adicionando Textura:
+
+Para realizar essa operação são necessárias as operações a seguir.
+    1. Adicione o método iniciarTextura no Fluxo de inicialização:
+            
+        a. iniciarTextura();
+
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href="../../estilo.css" rel="stylesheet" />
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.4.0/gl-matrix-min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://www.alessiojr.com/disciplinas/cg/exemplos/js/webgl-utils.js"></script>
+        
+        <script type="text/javascript" src="ambiente.js"></script>
+        <script type="text/javascript" src="animacao.js"></script>
+        <script type="text/javascript" src="buffers.js"></script>
+        <script type="text/javascript" src="cena.js"></script>
+        <script type="text/javascript" src="matrix.js"></script>
+        <script type="text/javascript" src="shaders.js"></script>
+        <script type="text/javascript" src="textura.js"></script>
+        <script type="text/javascript" src="teclado.js"></script>
+
+        <script type="text/javascript">
+    
+        // Iniciar o ambiente quando a página for carregada
+        $(function(){
+            iniciaWebGL();
+        });
+    
+        //-------------------------------------------------------------------------------------
+        // Fluxo de inicialização
+        //-------------------------------------------------------------------------------------
+        function iniciaWebGL(){
+            var canvas = $('#canvas-webgl')[0];
+            
+            iniciarGL(canvas);
+            iniciarShaders();
+            iniciarBuffers();
+            iniciarTextura();
+            iniciarAmbiente();
+            iniciarTextura();
+
+            document.onkeydown = eventoTeclaPress;
+            document.onkeyup = eventoTeclaSolta;
+
+            tick();
+
+        }
+
+        function iniciarGL(canvas){
+            try{
+                gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+                gl.viewportWidth  = canvas.width;
+                gl.viewportHeight = canvas.height;
+            }
+            catch(e){
+                if(!gl)
+                    alert("Não pode inicializar WebGL, desculpe");
+            }
+        }
+
+    </script>
+
+    <script id="shader-vs" type="x-shader/x-vertex">
+        // Executado para cada vertice
+        
+        attribute vec3 aVertexPosition;   
+
+        attribute vec2 aTextureCoord;
+        
+        uniform mat4 uMMatrix; 
+        uniform mat4 uVMatrix; 
+        uniform mat4 uPMatrix; 
+
+        varying vec2 vTextureCoord;
+
+        void main(void){
+
+            gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+
+            vTextureCoord = aTextureCoord;
+
+        }
+    </script>
+
+    <script id="shader-fs" type="x-shader/x-fragment">
+        /* Definição da cor do fragmento */
+        precision mediump float;
+
+        varying vec2 vTextureCoord;
+
+        uniform sampler2D uSampler;
+        
+        void main(void){
+
+            gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+
+        }
+    </script>
+
+    </head>
+
+    <body>
+        <div class="barra_superior">
+            <h1>AdrlVMA</h1>
+        </div>
+
+        <hr>
+        <canvas id="canvas-webgl"
+                width="600px"
+                height="500px"
+                style="border:none">
+        </canvas>
+    </body>
+</html>
