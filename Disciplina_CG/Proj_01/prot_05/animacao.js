@@ -8,6 +8,9 @@ function degToRad(graus) {
 function tick(){
 
     requestAnimFrame(tick);
+
+    tratarTeclado();
+
     desenharCena();
 
     animar_corpo();

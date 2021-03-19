@@ -58,7 +58,15 @@ function desenha_rabo(){
     mat4.translate(mMatrix, mMatrix, translation);
     
     
-    mat4.rotate(mMatrix, mMatrix, degToRad(r_rabo), [1, 1, 1]);   // Aplica rotação
+    mat4.rotate(mMatrix, mMatrix, degToRad(r_rabo), [0, 1, 0]);   // Aplica rotação
+
+    mat4.rotate(mMatrix, mMatrix, degToRad(x_desloc_rabo_p), [1, 0, 0]);
+    mat4.rotate(mMatrix, mMatrix, degToRad(y_desloc_rabo_p), [0, 1, 0]);
+    mat4.rotate(mMatrix, mMatrix, degToRad(z_desloc_rabo_p), [0, 0, 1]);
+
+    mat4.rotate(mMatrix, mMatrix, degToRad(x_desloc_rabo_n), [-1, 0, 0]);
+    mat4.rotate(mMatrix, mMatrix, degToRad(y_desloc_rabo_n), [0, -1, 0]);
+    mat4.rotate(mMatrix, mMatrix, degToRad(z_desloc_rabo_n), [0, 0, -1]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, rabo_vertex_position_b);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, rabo_vertex_position_b.itemSize, gl.FLOAT, false, 0, 0);
@@ -80,13 +88,13 @@ function animar_rabo(){
     if(ultimo_rabo != 0){
     
         var diferenca = agora - ultimo_rabo;
-        if(teste_rabo == false){
-            r_rabo  += ((90*diferenca)/10.0) % 360.0;
-        }
-        if(teste_rabo == true){
-            r_rabo  -= ((90*diferenca)/1000.0) % 360.0;
-        }
-
+              if(teste_rabo == false){
+                r_rabo  += ((90*diferenca)/(1000)) % 360.0;
+            }
+            if(teste_rabo == true){
+                r_rabo  -= ((90*diferenca)/(1000)) % 360.0;
+            }
+       
         /*if(r_rabo >= 180){
             teste_rabo = true;
             iniciar_buffer_cor_rabo();

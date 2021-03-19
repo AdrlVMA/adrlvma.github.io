@@ -53,9 +53,9 @@ function iniciar_buffer_cor_piramide(){
 function desenha_Piramide(){
 
     // Desenhando Triângulo
-    var translation = vec3.create();
-    vec3.set (translation, 0.0, 0.0, -7.0); 
-    mat4.translate(mMatrix, mMatrix, translation);
+    var translation_corpo = vec3.create();
+    vec3.set (translation_corpo, 0.0, 0.0, -7.0); 
+    mat4.translate(mMatrix, mMatrix, translation_corpo);
 
     mPushMatrix();
     

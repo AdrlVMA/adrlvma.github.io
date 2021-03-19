@@ -84,11 +84,11 @@ function iniciar_buffer_cor_pe_esquerdo(){
 var deslocamento_direito = 0;
 function desenhar_pe_direito(){
 
-    var translation = vec3.create();
-    vec3.set(translation, 1+  deslocamento_direito, -1.6, 1.0); 
+    var translation_pe = vec3.create();
+    vec3.set(translation_pe, 1+  deslocamento_direito, -1.6, 1.0); 
 
     mPushMatrix();
-    mat4.translate(mMatrix, mMatrix, translation);
+    mat4.translate(mMatrix, mMatrix, translation_pe);
 
 
     gl.bindBuffer(gl.ARRAY_BUFFER, pe_vertex_posicao_b);

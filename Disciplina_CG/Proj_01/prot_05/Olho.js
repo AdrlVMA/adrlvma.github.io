@@ -41,12 +41,27 @@ function definindo_cores_circulo(){
 
 }
 
+function definindo_cores_circulo_2(){
+
+    circle_vertex_color_b = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, circle_vertex_color_b);
+
+    cores = cor_random_n(qtd_vertices_fix);
+    cores = cor_random_vertice(qtd_vertices_fix);
+    
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cores), gl.STATIC_DRAW);
+    
+    circle_vertex_color_b.itemSize = 4;
+    circle_vertex_color_b.numItems = qtd_vertices_fix;
+
+}
+
 function desenhar_olho_esq(){
 
     //Criando nariz
-    var translation = vec3.create();
-    vec3.set (translation, 0, 2, -2.0); 
-    mat4.translate(mMatrix, mMatrix, translation);
+    var translation_olho = vec3.create();
+    vec3.set (translation_olho, 0, 2, -2.0); 
+    mat4.translate(mMatrix, mMatrix, translation_olho);
     gl.bindBuffer(gl.ARRAY_BUFFER, circle_vertex_position_b);
     gl.vertexAttribPointer(
         

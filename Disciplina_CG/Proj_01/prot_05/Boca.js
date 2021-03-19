@@ -1,11 +1,11 @@
 function desenhar_boca(){
 
     //Aproveitando buffer 1 para criar o chapéu
-    var translation = vec3.create();
-    vec3.set (translation, -0.32, 0.6, 4.0); 
+    var translation_boca = vec3.create();
+    vec3.set (translation_boca, -0.32, 0.6+y_desloc_boca, 4.0); 
     
     
-    mat4.translate(mMatrix, mMatrix, translation);
+    mat4.translate(mMatrix, mMatrix, translation_boca);
     gl.bindBuffer(gl.ARRAY_BUFFER, retangulo_02_vertex_position_b);
     gl.vertexAttribPointer(
         
@@ -15,7 +15,7 @@ function desenhar_boca(){
         
     );
 
-    mPushMatrix();
+   //mPushMatrix();
     gl.bindBuffer(gl.ARRAY_BUFFER, retangulo_02_vertex_color_b);
     gl.vertexAttribPointer(
 
@@ -29,7 +29,7 @@ function desenhar_boca(){
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, retangulo_02_vertex_position_b.numItems);
 
-    mPopMatrix();
+    //mPopMatrix();
 
 }
 

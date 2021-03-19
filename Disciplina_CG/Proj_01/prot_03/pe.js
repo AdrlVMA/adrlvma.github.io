@@ -1,6 +1,7 @@
 
 function desenhar_pe_esquerdo(){
 
+    mPushMatrix();
     var translation = vec3.create();
     vec3.set (translation, -3.0, -15.6, 0.0); 
     mat4.translate(mMatrix, mMatrix, translation);
@@ -54,6 +55,7 @@ function desenhar_pe_direito(){
 
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, retangulo_01_vertex_position_b.numItems);
+    mPopMatrix();
 
 }
 

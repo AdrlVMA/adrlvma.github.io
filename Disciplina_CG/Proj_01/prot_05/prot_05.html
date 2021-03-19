@@ -7,6 +7,7 @@
         <script type="text/javascript" src="./animacao.js"></script>
         <script type="text/javascript" src="./cores.js"></script>
         <script type="text/javascript" src="./matrix.js"></script>
+        <script type="text/javascript" src="./teclado.js"></script>
 
         <script type="text/javascript" src="./Rabo.js"></script>
         <script type="text/javascript" src="./Corpo.js"></script>
@@ -42,6 +43,11 @@
             iniciarAmbiente();
             desenharCena();
 
+
+            document.onkeydown = eventoTeclaPress;
+            document.onkeyup = eventoTeclaSolta;
+
+
             tick();
 
         }
@@ -75,7 +81,7 @@
         function desenharCena(){
 
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            mat4.perspective(pMatrix, 45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
+            mat4.perspective(pMatrix, x, gl.viewportWidth / gl.viewportHeight, 0.1, x);
             mat4.identity(mMatrix);
             mat4.identity(vMatrix);
     

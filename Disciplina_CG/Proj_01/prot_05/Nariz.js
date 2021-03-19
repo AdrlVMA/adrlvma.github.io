@@ -50,12 +50,12 @@ function iniciar_buffer_cor_nariz(){
 function desenha_nariz(){
 
     // Desenhando Triângulo
-    var translation = vec3.create();
-    vec3.set (translation, -5.4, 6.8, -20.0); 
+    var translation_nariz = vec3.create();
+    vec3.set (translation_nariz, -5.4, 6.8, -20.0); 
     
     mPushMatrix();
 
-    mat4.translate(mMatrix, mMatrix, translation);
+    mat4.translate(mMatrix, mMatrix, translation_nariz);
     
     
     mat4.rotate(mMatrix, mMatrix, degToRad(r_nariz), [1, -1, -1]);   // Aplica rotação

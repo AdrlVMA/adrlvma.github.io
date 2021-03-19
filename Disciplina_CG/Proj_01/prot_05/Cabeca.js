@@ -70,12 +70,12 @@ function iniciar_buffer_cor_cabeca(){
 
 function desenhar_cabeca(){
 
-    var translation = vec3.create();
-    vec3.set (translation, -1.2, 3.5, -8.0); 
+    var translation_cabeca = vec3.create();
+    vec3.set (translation_cabeca, -1.2, 3.5, -8.0); 
 
     mPushMatrix();
     //vec3.set (translation, -1.0, 3.0, -8.0); 
-    mat4.translate(mMatrix, mMatrix, translation);
+    mat4.translate(mMatrix, mMatrix, translation_cabeca);
     gl.bindBuffer(gl.ARRAY_BUFFER, cabeca_vertex_posicao_b);
     gl.vertexAttribPointer(
         
