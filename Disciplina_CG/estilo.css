@@ -18,4 +18,9 @@ p { text-align: justify; }
     font-size:1.5cm;
 }
 
+a:visited {
+    color:#999999;
+    text-decoration:none;
+}
+
 dt {font-size:.5cm;}
