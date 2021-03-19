@@ -66,10 +66,7 @@ function tratarTeclado() {
         // B
         definido_cores_quadrado();
     }
-    if (teclasPressionadas[67]) {
-        // c
-        x -= 1;
-    }
+
       
 
   }

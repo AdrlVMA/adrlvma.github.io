@@ -81,7 +81,7 @@
         function desenharCena(){
 
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            mat4.perspective(pMatrix, x, gl.viewportWidth / gl.viewportHeight, 0.1, x);
+            mat4.perspective(pMatrix, 45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
             mat4.identity(mMatrix);
             mat4.identity(vMatrix);
     
@@ -181,8 +181,7 @@
         <hr>
         <p> 
             Nesta página você encontrará a segunda fase do desenvolvimento de um esboço baseado em uma imagem tida como inspiração.
-            Neste arquivo, busca-se mostrar a competencia de coloração dos objetos e formas na tela utilizando WebGL. Para uma experiência 
-            mais satisfatória aperte F5 e observe a mágica.
+            Neste arquivo, busca-se mostrar a competencia de modificação da cena por meio da interação com teclado utilizando WebGL. 
             Caso seja do seu interesse ver os códigos, fique a vontade para consultar o github de <a href="https://github.com/AdrlVMA">@adrlvma</a>. Aproveite e divirta-se!!!
         </p>
 
@@ -193,5 +192,16 @@
                 height="500px"
                 style="border:none">
         </canvas>
+
+        <hr>
+        
+            <dd>    Utilize as setas, page up e page down para alterar o rabo (pirâmide invertida na parte de trás). 
+            <dd>    Utilize as teclas A e D para mudar a cor dos olhos (dois circulos).
+            <dd>    Utilize as teclas W e S para mover a boca (quadrado pequeno). 
+            <dd>    Utilize a tecla B para alterar a cor da boca.
+
+
+
+
     </body>
 </html>
