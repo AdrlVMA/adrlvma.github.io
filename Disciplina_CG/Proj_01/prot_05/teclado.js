@@ -22,7 +22,7 @@ function tratarTeclado() {
 
     if (teclasPressionadas[33]) {
       // Page Up
-      z_desloc_rabo_p += 10;
+      z_desloc_rabo_p += 1;
 
     }
     if (teclasPressionadas[34]) {
